@@ -1,6 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box;
     font-family: 'Courier';
@@ -16,5 +16,3 @@ const GlobalStyle = createGlobalStyle`
     background: #fafafa;
     }
 `;
-
-export default GlobalStyle;

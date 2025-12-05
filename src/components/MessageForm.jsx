@@ -1,44 +1,53 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-//Creating MessageForm (component) with props onSend (function) This will be called when the user writes a message //
-const MessageForm = ({ onSend }) => {
+//** Creating MessageForm (component) with props onSend (function) This will be called when the user writes a message. The textarea takes only max 140 letters */
+export const MessageForm = ({ onSend }) => {
   const [message, setMessage] = useState("");
-  const MAX_CHARS = 140; //max letters in textarea
+  const MAX_CHARS = 140;
 
-  //setMessage (function) is used to update the value in message (variable). handleSubmit runs when the user clicks on submitbutton. 
+  //** setMessage (function) is used to update the value in message (variable). handleSubmit runs when the user clicks on submit-button */
   const handleSubmit = (e) => {
-    e.preventDefault();  //prevents the page to reload                         
+    e.preventDefault();
     if (!message.trim() || message.length > MAX_CHARS) return;
-    onSend(message);  //the message will be sent to function onSend. 
+    onSend(message);
     setMessage("");
   };
 
+  //** when the user writes in the textarea, this function runs. If its to long, cut it by 140 letters */
   const handleChange = (e) => {
     setMessage(e.target.value);
-    const value = e.target.slice(0, MAX_CHARS);
+    const value = e.target.value.slice(0, MAX_CHARS);
     setMessage(value);
   };
 
   const chars = message.length;
-  const isOverLimit = chars >= MAX_CHARS;
+  const isOverLimit = chars >= MAX_CHARS; //** show warning + disable button */
 
+  //** FORM. handleSubmit runs when the user clicks the button or clicks the button or presses Enter. All controlled input values come from React state (message)*/
   return (
     <FormWrapper onSubmit={handleSubmit}>
       <Label htmlFor="message">What´s making you happy right now?</Label>
+
+      {/* Controlled textarea. Value comes from state and updates via handleChange */}
       <TextArea
         id="message"
         name="message"
         value={message}
         onChange={handleChange}
         placeholder="Type your happy thought..."
-        $isOverLimit={isOverLimit}
+        $isOverLimit={isOverLimit} //** Used for dynamic styling in styled-components */
         maxLength={MAX_CHARS}
       />
+      {/* Character counter. (e.g., "53/140"). Turns red if over limit */}
       <Counter $isOverLimit={isOverLimit}>
         {chars}/{MAX_CHARS}
       </Counter>
+
+      {/* Error message appears only when too many characters */}
       {isOverLimit && <ErrorMessage>You have to many characters! Please shorten your message. </ErrorMessage>}
+
+      {/* Button will be disabled when to many characters */}
       <Button type="submit" disabled={isOverLimit}>
         ❤️ Send Happy Thought ❤️
       </Button>
@@ -46,7 +55,7 @@ const MessageForm = ({ onSend }) => {
   );
 };
 
-export default MessageForm;
+// ===== Styled Components ===== //
 
 const FormWrapper = styled.form`
   display: flex;
@@ -97,7 +106,7 @@ const Button = styled.button`
   border: none;
   align-self: flex-start;
   cursor: ${(p) => (p.disabled ? "not-allowed" : "pointer")} ;
-
+  
   @media (min-width: 480px) {
     padding: 12px 18px
   }

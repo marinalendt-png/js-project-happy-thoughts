@@ -3,22 +3,31 @@ import styled from "styled-components";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+// Shows the time e.g., "2 minutes ago", formatting in dayjs
 dayjs.extend(relativeTime);
-//This is what the messageCard looks like in the browser. The MessageCard (function) takes props (message) and return JSX. 
 
-const MessageCard = ({ message }) => {
+//** MessageCard - displays a single message with its text, like-button, like-count and relative timestamp */
+export const MessageCard = ({ message }) => {
+  // Local like-state, that starts from message.likes or 0
   const [likes, setLikes] = useState(message.likes ?? 0);
-  const [tick, setTick] = useState(0); //time renders every minute
 
+  // Used to force re-render every minute so the "time ago" updates 
+  const [tick, setTick] = useState(0);
+
+  //** Update the component every 60 seconds. This makes the "3 minutes ago" text stay accurate */
   useEffect(() => {
     const interval = setInterval(() => setTick((t) => t + 1), 60000);
+
+    // Clean up interval on unmount
     return () => clearInterval(interval);
   }, []);
 
+  // Increments the like counter when the heard button is pressed 
   const handleLike = () => {
     setLikes((l) => l + 1);
   };
 
+  // Converts timestamp info "x minutes ago"
   const timeText = dayjs(message.createdAt).fromNow();
 
   return (
@@ -37,7 +46,7 @@ const MessageCard = ({ message }) => {
   );
 };
 
-export default MessageCard;
+// ===== Styled Components ===== //
 
 const CardWrapper = styled.section`
   display: flex;

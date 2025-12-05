@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
 import styled from "styled-components";
-import MessageForm from './components/MessageForm';
-import MessageCard from './components/MessageCard';
-import GlobalStyle from "./styles/GlobalStyle";
+import { MessageForm } from './components/MessageForm';
+import { MessageCard } from './components/MessageCard';
+import { GlobalStyle } from "./styles/GlobalStyle";
 
-const App = () => {
+//** App - the main component for the application. It handles the list of messages och passes them down function to child components */
+export const App = () => {
+  // State that stores all submitted messages
   const [messages, setMessages] = useState([]);
 
+  //** addMessage - this function is called when MessageForm submits next time. It creates a message object and adds it to the beginning of the list */
   const addMessage = (text) => {
     const newMessage = {
       id: Date.now(),
       text,
-      likes: 0,
-      time: Date.now(),
+      likes: 0, //starting the like count
+      time: Date.now(), // timestamp to show when the message was created. 
     };
-    setMessages(prev => [newMessage, ...prev]);
+    setMessages(prev => [newMessage, ...prev]); // add the newest message at the top 
   };
 
   return (
@@ -32,7 +35,7 @@ const App = () => {
   );
 }
 
-export default App;
+// ===== Styled Components ===== //
 
 const AppContainer = styled.section`
   width: 100%;

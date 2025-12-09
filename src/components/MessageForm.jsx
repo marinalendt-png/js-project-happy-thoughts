@@ -9,14 +9,13 @@ export const MessageForm = ({ onSend }) => {
   //** setMessage (function) is used to update the value in message (variable). handleSubmit runs when the user clicks on submit-button */
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!message.trim() || message.length > MAX_CHARS) return;
+    if (!message.trim()) return;
     onSend(message);
     setMessage("");
   };
 
   //** when the user writes in the textarea, this function runs. If its to long, cut it by 140 letters */
   const handleChange = (e) => {
-    setMessage(e.target.value);
     const value = e.target.value.slice(0, MAX_CHARS);
     setMessage(value);
   };
@@ -24,7 +23,7 @@ export const MessageForm = ({ onSend }) => {
   const chars = message.length;
   const isOverLimit = chars >= MAX_CHARS; //** show warning + disable button */
 
-  //** FORM. handleSubmit runs when the user clicks the button or clicks the button or presses Enter. All controlled input values come from React state (message)*/
+  //** FORM. handleSubmit runs when the user clicks the button or presses Enter. All controlled input values come from React state (message)*/
   return (
     <FormWrapper onSubmit={handleSubmit}>
       <Label htmlFor="message">What´s making you happy right now?</Label>
@@ -45,7 +44,7 @@ export const MessageForm = ({ onSend }) => {
       </Counter>
 
       {/* Error message appears only when too many characters */}
-      {isOverLimit && <ErrorMessage>You have to many characters! Please shorten your message. </ErrorMessage>}
+      {isOverLimit && <ErrorMessage>You have too many characters! Please shorten your message. </ErrorMessage>}
 
       {/* Button will be disabled when to many characters */}
       <Button type="submit" disabled={isOverLimit}>
@@ -100,7 +99,6 @@ const ErrorMessage = styled.div`
 
 const Button = styled.button`
   background:${(p) => (p.disabled ? "#ccc" : "#ffb3b3")};
-  margin-top: 10px 14px;
   padding: 10px; 
   border-radius: 20px;
   border: none;

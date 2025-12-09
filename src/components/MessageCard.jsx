@@ -7,12 +7,10 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 //** MessageCard - displays a single message with its text, like-button, like-count and relative timestamp */
-export const MessageCard = ({ message }) => {
-  // Local like-state, that starts from message.likes or 0
-  const [likes, setLikes] = useState(message.likes ?? 0);
+export const MessageCard = ({ message, onLike }) => {
 
   // Used to force re-render every minute so the "time ago" updates 
-  const [tick, setTick] = useState(0);
+  const [tick, setTick] = React.useState(0);
 
   //** Update the component every 60 seconds. This makes the "3 minutes ago" text stay accurate */
   useEffect(() => {
@@ -24,11 +22,13 @@ export const MessageCard = ({ message }) => {
 
   // Increments the like counter when the heard button is pressed 
   const handleLike = () => {
-    setLikes((l) => l + 1);
+    if (onLike) {
+      onLike(message.id);
+    }
   };
 
   // Converts timestamp info "x minutes ago"
-  const timeText = dayjs(message.createdAt).fromNow();
+  const timeText = dayjs(message.time).fromNow();
 
   return (
     <CardWrapper>
@@ -36,9 +36,12 @@ export const MessageCard = ({ message }) => {
       <CardFooter>
         <LikeContainer>
           <HeartButton
-            onClick={handleLike} $active={likes > 0}>❤️
+            onClick={handleLike}
+            $active={message.likes > 0}
+            aria-label="Like this thought"
+          >❤️
           </HeartButton>
-          <LikesCount>{likes}</LikesCount>
+          <LikesCount>{message.likes}</LikesCount>
         </LikeContainer>
         <Time>{timeText}</Time>
       </CardFooter>
@@ -62,7 +65,7 @@ const CardWrapper = styled.section`
 `;
 
 const MessageText = styled.p`
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.4;
   margin: 0;
 `;

@@ -16,9 +16,8 @@ export const App = () => {
   //Errorstatus if the fetch will fail
   const [error, setError] = useState(null)
 
-  //When the app starts, we get thoughts from API
+  //When the app starts, we get thoughts from API. We use a async-function inside the useEffect. 
   useEffect(() => {
-    //We use a async-function inside the useEffect
     const loadThoughts = async () => {
       try {
         setIsLoading(true); //shows spinner or text
@@ -42,7 +41,7 @@ export const App = () => {
     };
 
     loadThoughts();
-  }, []);
+  }, []); //the useEffect will only be triggered once, because of the empty array []
 
   //** addMessage - this function is called when MessageForm submits next time. It creates a message object and adds it to the beginning of the list */
   const addMessage = async (text) => {

@@ -18,7 +18,7 @@ export const MessageCard = ({ message, onLike }) => {
   useEffect(() => {
     const interval = setInterval(() => setTick((t) => t + 1), 60000);
     return () => clearInterval(interval); // Clean up interval on unmount
-  }, []);
+  }, []); //the useEffect wil only render once because of the empty array []
 
   // Increments the like counter when the heard button is pressed 
   const handleLike = async () => {

@@ -1,30 +1,27 @@
 const BASE_URL = "https://happy-thoughts-api-4ful.onrender.com/thoughts";
 
-// GET- get thoughts
-//Fetch är som en liten robot som hämtar lådan med tankar. json gör det läsbart. lådan skickas tillbaka till app.js som visar tankarna. 
+// GET - fetches the 20 most recent thoughjts from the API. A list of messages will be shown as the app loads. 
 export const fetchThoughts = async () => {
   const res = await fetch(BASE_URL);
   const data = await res.json();
   return data;
 };
 
-//POST - send a new thought
-//när en tanke skrivs i formuläret, tar jag texten och skickar till api-servern. servern lägger den i databasen och skickar tillbaka en ny tanke-låda. app.js visar nu den hya lådan och den nyaste tanken lägst upp i listan. 
+// POST - creates a new thought. The API wants a JSON body with a "message" property. If it is successful, the API returns a full thought object back. 
 export const postThought = async (message) => {
   const res = await fetch(BASE_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(message) //Send the new version of Time
+    body: JSON.stringify(message)
   });
 
   const data = await res.json();
   return data;
 };
 
-// POST - send a like to a thought
-//när hjärtat klickas skickas en signal till api:t. Den säger öka antalet hjärtan på denna tanken. Servern gör det och skickar tillbaka den uppdaterade tanken. 
+// POST - Like a thought. This function sends a like to the API using the thoughts ID. The API then sends back an updated thought, including a new heart count. 
 export const likeThought = async (thoughtId) => {
   const res = await fetch(`${BASE_URL}/${thoughtId}/like`, {
     method: "POST",

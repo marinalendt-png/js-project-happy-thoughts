@@ -11,24 +11,27 @@ export const MessageCard = ({ message, onLike }) => {
 
   // Used to force re-render every minute so the "time ago" updates 
   const [tick, setTick] = React.useState(0);
+  const [likes, setLikes] = React.useState(message.likes ?? 0);
+  const [liked, setLiked] = React.useState(false);
 
   //** Update the component every 60 seconds. This makes the "3 minutes ago" text stay accurate */
   useEffect(() => {
     const interval = setInterval(() => setTick((t) => t + 1), 60000);
-
-    // Clean up interval on unmount
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Clean up interval on unmount
   }, []);
 
   // Increments the like counter when the heard button is pressed 
-  const handleLike = () => {
-    if (onLike) {
-      onLike(message.id);
+  const handleLike = async () => {
+    if (!liked) {
+      setLikes(likes + 1); //updates UI directly
+      setLiked(true); //"the user clicked = true"
+      if (onLike) await onLike(message.id); //send to API
     }
-  };
+  }
 
   // Converts timestamp info "x minutes ago"
   const timeText = dayjs(message.time).fromNow();
+
 
   return (
     <CardWrapper>
@@ -37,11 +40,11 @@ export const MessageCard = ({ message, onLike }) => {
         <LikeContainer>
           <HeartButton
             onClick={handleLike}
-            $active={message.likes > 0}
+            $active={liked || likes > 0}
             aria-label="Like this thought"
           >❤️
           </HeartButton>
-          <LikesCount>{message.likes}</LikesCount>
+          <LikesCount>{likes}</LikesCount>
         </LikeContainer>
         <Time>{timeText}</Time>
       </CardFooter>
@@ -51,6 +54,7 @@ export const MessageCard = ({ message, onLike }) => {
 
 // ===== Styled Components ===== //
 
+/* With animation for new message */
 const CardWrapper = styled.section`
   display: flex;
   flex-direction: column;
@@ -62,6 +66,24 @@ const CardWrapper = styled.section`
   margin: 0 auto;
   width: 100%; 
   max-width: 550px;
+  opacity: 0;
+  transform: translateY(-20px) scale(0.95);
+  animation: fadeIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(5px) scale(1.02);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
 `;
 
 const MessageText = styled.p`
@@ -90,6 +112,25 @@ const HeartButton = styled.button`
   border: none;
   cursor: pointer;
   transition: background 120ms ease, transform 120ms ease;
+
+  &:active {
+    animation: jump 0.8s forwards;
+  }
+  
+  @keyframes jump {
+    0% {
+      transform: translateY(0) scale(1);
+    }
+    30% {
+      transform: translateY(-15px) scale(1.2);
+      }
+    60% {
+      transform: translateY(5px) scale(0.9);
+    }
+    100% {
+      transform: translateY(0) scale(1);
+    }
+  }
 `;
 
 const LikesCount = styled.span`

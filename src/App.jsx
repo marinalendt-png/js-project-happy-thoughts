@@ -116,7 +116,7 @@ const MessageList = styled.section`
   gap: 12px;
   width: 100%;
 
-  @media (min-width: 768px) {
+  @media (min-width: 480px) {
     gap: 16px;
   }
 `;

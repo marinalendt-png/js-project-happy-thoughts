@@ -5,13 +5,23 @@ import styled from "styled-components";
 export const MessageForm = ({ onSend }) => {
   const [message, setMessage] = useState("");
   const MAX_CHARS = 140;
+  const [error, setError] = useState(null);
 
   //** setMessage (function) is used to update the value in message (variable). handleSubmit runs when the user clicks on submit-button */
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    if (!message.trim()) {
+      setError("You need to write something!");
+      return;
+    }
+    if (message.length < 5) {
+      setError("Your message is too short!");
+      return;
+    }
+
     onSend(message);
     setMessage("");
+    setError(null);
   };
 
   //** when the user writes in the textarea, this function runs. If its to long, cut it by 140 letters */
@@ -22,6 +32,7 @@ export const MessageForm = ({ onSend }) => {
 
   const chars = message.length;
   const isOverLimit = chars >= MAX_CHARS; //** show warning + disable button */
+  const charsLeft = MAX_CHARS - message.length;
 
   //** FORM. handleSubmit runs when the user clicks the button or presses Enter. All controlled input values come from React state (message)*/
   return (
@@ -39,12 +50,13 @@ export const MessageForm = ({ onSend }) => {
         maxLength={MAX_CHARS}
       />
       {/* Character counter. (e.g., "53/140"). Turns red if over limit */}
-      <Counter $isOverLimit={isOverLimit}>
-        {chars}/{MAX_CHARS}
+      <Counter $isOverLimit={charsLeft < 0}>
+        {charsLeft} characters left
       </Counter>
 
       {/* Error message appears only when too many characters */}
       {isOverLimit && <ErrorMessage>You have too many characters! Please shorten your message. </ErrorMessage>}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
 
       {/* Button will be disabled when to many characters */}
       <Button type="submit" disabled={isOverLimit}>

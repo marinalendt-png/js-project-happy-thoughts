@@ -8,30 +8,27 @@ dayjs.extend(relativeTime);
 
 //** MessageCard - displays a single message with its text, like-button, like-count and relative timestamp */
 export const MessageCard = ({ message, onLike }) => {
-
-  // Used to force re-render every minute so the "time ago" updates 
   const [tick, setTick] = React.useState(0);
   const [likes, setLikes] = React.useState(message.likes ?? 0);
-  const [liked, setLiked] = React.useState(false);
 
-  //** Update the component every 60 seconds. This makes the "3 minutes ago" text stay accurate */
+  // Update likes when app.js sends new data from API
+  useEffect(() => {
+    setLikes(message.likes);
+  }, [message.likes]);
+
+  // Re-render every 60 sec for "time ago", and cleans up interval on unmount
   useEffect(() => {
     const interval = setInterval(() => setTick((t) => t + 1), 60000);
-    return () => clearInterval(interval); // Clean up interval on unmount
-  }, []); //the useEffect wil only render once because of the empty array []
+    return () => clearInterval(interval);
+  }, []);
 
   // Increments the like counter when the heard button is pressed 
-  const handleLike = async () => {
-    if (!liked) {
-      setLikes(likes + 1); //updates UI directly
-      setLiked(true); //"the user clicked = true"
-      if (onLike) await onLike(message.id); //send to API
-    }
-  }
+  const handleLike = () => {
+    if (onLike) onLike(message.id); //send to API
+  };
 
   // Converts timestamp info "x minutes ago"
   const timeText = dayjs(message.time).fromNow();
-
 
   return (
     <CardWrapper>
@@ -40,7 +37,7 @@ export const MessageCard = ({ message, onLike }) => {
         <LikeContainer>
           <HeartButton
             onClick={handleLike}
-            $active={liked || likes > 0}
+            $active={likes > 0}
             aria-label="Like this thought"
           >❤️
           </HeartButton>

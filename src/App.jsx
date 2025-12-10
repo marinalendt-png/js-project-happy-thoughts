@@ -7,13 +7,10 @@ import { fetchThoughts, postThought, likeThought } from "./api.js";
 
 //** App - the main component for the application. It handles the list of messages och passes them down function to child components */
 export const App = () => {
-  // State that stores all submitted messages
+
+  // States that stores all submitted messages, shows when loading and when error
   const [messages, setMessages] = useState([]);
-
-  //Loadingstatus while we wait for API
   const [isLoading, setIsLoading] = useState(true);
-
-  //Errorstatus if the fetch will fail
   const [error, setError] = useState(null)
 
   //When the app starts, we get thoughts from API. We use a async-function inside the useEffect. 
@@ -56,21 +53,29 @@ export const App = () => {
         time: new Date(newThought.createdAt).getTime()
       };
 
-      setMessages(prev => [normalized, ...prev]); // add the newest message at the top 
+      setMessages(prev => [normalized, ...prev]);
+      setError(null); // add the newest message at the top 
     } catch (err) {
       console.error(err);
-      alert("Could not send your thought. Please try again later.");
+      setError("Could not send your thought. Make sure you have 5-140 characters.");
     }
   };
 
+  // Like handling.....
   const handleLike = async (id) => {
+    setMessages(prev =>
+      prev.map(msg =>
+        msg.id === id ? { ...msg, likes: msg.likes + 1 } : msg
+      )
+    );
+
     try {
-      const updatedThought = await likeThought(id); //Sending like to API
+      const updatedThought = await likeThought(id);
       setMessages(prev =>
         prev.map(msg =>
           msg.id === id ? { ...msg, likes: updatedThought.hearts } : msg
         )
-      );
+      )
     } catch (err) {
       console.error("Could not like thought", err);
     }

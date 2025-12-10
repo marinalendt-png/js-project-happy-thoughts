@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-//** Creating MessageForm (component) with props onSend (function) This will be called when the user writes a message. The textarea takes only max 140 letters */
+//** Creating MessageForm (component) with props onSend (function) This will be called when the user writes a message. */
 export const MessageForm = ({ onSend }) => {
   const [message, setMessage] = useState("");
   const MAX_CHARS = 140;
@@ -15,7 +15,7 @@ export const MessageForm = ({ onSend }) => {
       return;
     }
     if (message.length < 5) {
-      setError("Your message is too short!");
+      setError("You have to have more than 5 characters!");
       return;
     }
 
@@ -24,7 +24,7 @@ export const MessageForm = ({ onSend }) => {
     setError(null);
   };
 
-  //** when the user writes in the textarea, this function runs. If its to long, cut it by 140 letters */
+  //** When the user writes in the textarea, this function runs. If its to long, cut it by 140 letters */
   const handleChange = (e) => {
     const value = e.target.value.slice(0, MAX_CHARS);
     setMessage(value);
@@ -49,6 +49,7 @@ export const MessageForm = ({ onSend }) => {
         $isOverLimit={isOverLimit} //** Used for dynamic styling in styled-components */
         maxLength={MAX_CHARS}
       />
+
       {/* Character counter. (e.g., "53/140"). Turns red if over limit */}
       <Counter $isOverLimit={charsLeft < 0}>
         {charsLeft} characters left

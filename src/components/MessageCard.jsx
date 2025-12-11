@@ -142,5 +142,5 @@ const LikesCount = styled.span`
 
 const Time = styled.span`
   font-size: 12px;
-  color: rgba(181, 177, 177, 1);
+  color: color: #333;
 `;

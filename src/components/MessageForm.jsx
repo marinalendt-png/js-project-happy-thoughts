@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-//** Creating MessageForm (component) with props onSend (function) This will be called when the user writes a message. */
+// MessageForm (component) with props onSend (function) This will be called when the user writes a message. 
 export const MessageForm = ({ onSend }) => {
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(""); //useState = hook 
   const MAX_CHARS = 140;
   const [error, setError] = useState(null);
 
-  //** setMessage (function) is used to update the value in message (variable). handleSubmit runs when the user clicks on submit-button */
+  // setMessage (function) is used to update the value in message (variable). handleSubmit runs when the user clicks on submit-button . After send, the message-area is cleared.
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!message.trim()) {
@@ -24,17 +24,18 @@ export const MessageForm = ({ onSend }) => {
     setError(null);
   };
 
-  //** When the user writes in the textarea, this function runs. If its to long, cut it by 140 letters */
+  // When the user writes in the textarea, this function runs. If its to long, cut it by 140 letters
   const handleChange = (e) => {
     const value = e.target.value.slice(0, MAX_CHARS);
     setMessage(value);
   };
 
+  // Variables for UI, counter and warning about too many characters
   const chars = message.length;
-  const isOverLimit = chars >= MAX_CHARS; //** show warning + disable button */
+  const isOverLimit = chars >= MAX_CHARS;
   const charsLeft = MAX_CHARS - message.length;
 
-  //** FORM. handleSubmit runs when the user clicks the button or presses Enter. All controlled input values come from React state (message)*/
+  // FORM. handleSubmit runs when the user clicks the button or presses Enter. All controlled input values come from React state (message)*/
   return (
     <FormWrapper onSubmit={handleSubmit}>
       <Label htmlFor="message">What´s making you happy right now?</Label>
@@ -102,7 +103,7 @@ const Counter = styled.div`
   align-self: flex-end;
   padding-right: 6px;
   font-size: 12px;
-  color: ${(p) => (p.$isOverLimit ? "red" : "black")}
+  color: ${(p) => (p.$isOverLimit ? "red" : "black")};
 `;
 
 const ErrorMessage = styled.div`
@@ -116,9 +117,9 @@ const Button = styled.button`
   border-radius: 20px;
   border: none;
   align-self: flex-start;
-  cursor: ${(p) => (p.disabled ? "not-allowed" : "pointer")} ;
+  cursor: ${(p) => (p.disabled ? "not-allowed" : "pointer")};
   
   @media (min-width: 480px) {
-    padding: 12px 18px
+    padding: 12px 18px;
   }
 `;

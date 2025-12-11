@@ -5,7 +5,7 @@ import { MessageCard } from './components/MessageCard';
 import { GlobalStyle } from "./styles/GlobalStyle";
 import { fetchThoughts, postThought, likeThought } from "./api.js";
 
-//** App - the main component for the application. It handles the list of messages och passes them down function to child components */
+// App - the main component for the application. It handles the list of messages och passes them down function to child components
 export const App = () => {
 
   // States that stores all submitted messages, shows when loading and when error
@@ -13,11 +13,11 @@ export const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null)
 
-  //When the app starts, we get thoughts from API. We use a async-function inside the useEffect. 
+  // When the app starts, we get thoughts from API. The data is normalized and stored in messages (state). Runs only once when the app loads (empty array [])
   useEffect(() => {
     const loadThoughts = async () => {
       try {
-        setIsLoading(true); //shows spinner or text
+        setIsLoading(true); //shows text when loading
         setError(null); //reset previous errors
         const data = await fetchThoughts(); //calling api.js
 
@@ -38,9 +38,9 @@ export const App = () => {
     };
 
     loadThoughts();
-  }, []); //the useEffect will only be triggered once, because of the empty array []
+  }, []);
 
-  //** addMessage - this function is called when MessageForm submits next time. It creates a message object and adds it to the beginning of the list */
+  // addMessage - this function is called when MessageForm submits next time. It creates a message object and adds it to the start of the list 
   const addMessage = async (text) => {
     try {
       const newThought = await postThought({ message: text }); //Sending to API
@@ -61,7 +61,7 @@ export const App = () => {
     }
   };
 
-  // Like handling.....
+  // Updates the like count for a message both locally and in the API
   const handleLike = async (id) => {
     setMessages(prev =>
       prev.map(msg =>

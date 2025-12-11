@@ -1,6 +1,6 @@
 const BASE_URL = "https://happy-thoughts-api-4ful.onrender.com/thoughts";
 
-// GET - fetches the 20 most recent thoughjts from the API. A list of messages will be shown as the app loads. 
+// GET - fetches the 20 most recent thoughts from the API. A list of messages will be shown as the app loads. 
 export const fetchThoughts = async () => {
   const res = await fetch(BASE_URL);
   const data = await res.json();

@@ -6,26 +6,31 @@ import relativeTime from "dayjs/plugin/relativeTime";
 // Shows the time e.g., "2 minutes ago", formatting in dayjs
 dayjs.extend(relativeTime);
 
-//** MessageCard - displays a single message with its text, like-button, like-count and relative timestamp */
+// MessageCard - displays a single message with its text, like-button, like-count and relative timestamp
 export const MessageCard = ({ message, onLike }) => {
-  const [tick, setTick] = React.useState(0);
-  const [likes, setLikes] = React.useState(message.likes ?? 0);
+  const [tick, setTick] = useState(0);
+  const [likes, setLikes] = useState(message.likes ?? 0);
 
   // Update likes when app.js sends new data from API
   useEffect(() => {
     setLikes(message.likes);
   }, [message.likes]);
 
-  // Re-render every 60 sec for "time ago", and cleans up interval on unmount
+  // Re-render every 60 sec for "time ago", and cleans up interval on unmount. 
   useEffect(() => {
     const interval = setInterval(() => setTick((t) => t + 1), 60000);
     return () => clearInterval(interval);
   }, []);
 
-  // Increments the like counter when the heard button is pressed 
+  // Increments the like counter when the heard button is pressed, sends to the API
   const handleLike = () => {
-    if (onLike) onLike(message.id); //send to API
+    if (onLike) onLike(message.id);
   };
+  console.log(
+    "message.time:",
+    message.time,
+    dayjs(message.time).toISOString()
+  );
 
   // Converts timestamp info "x minutes ago"
   const timeText = dayjs(message.time).fromNow();

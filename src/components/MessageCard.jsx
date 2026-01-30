@@ -32,6 +32,16 @@ export const MessageCard = ({ message, onLike }) => {
     dayjs(message.time).toISOString()
   );
 
+  // For deleting a thought
+  const handleDelete = () => {
+    if (onDelete) onDelete(message.id);
+  };
+
+  // For updating a thought
+  const handleUpdate = () => {
+    if (onUpDate) onUpDate(message.id);
+  }
+
   // Converts timestamp info "x minutes ago"
   const timeText = dayjs(message.time).fromNow();
 
@@ -48,6 +58,10 @@ export const MessageCard = ({ message, onLike }) => {
           </HeartButton>
           <LikesCount>{likes}</LikesCount>
         </LikeContainer>
+        <ButtonContainer>
+          <EditButton onClick={handleUpdate} aria-label="Edit your thought">✏️</EditButton>
+          <DeleteButton onClick={handleDelete} aria-label="Delete your thought">✏️</DeleteButton>
+        </ButtonContainer>
         <Time>{timeText}</Time>
       </CardFooter>
     </CardWrapper>
@@ -139,6 +153,26 @@ const LikesCount = styled.span`
   font-size: 14px;
   margin-left: 6px;
 `;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+const EditButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+  transition: transform 120ms ease;
+
+  &:hover {
+    transform: scale(1.2);
+    }
+  `;
+
+const DeleteButton = styled(EditButton)``; //Styled the same way as EditButton
 
 const Time = styled.span`
   font-size: 12px;

@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { BASE_URL } from "./api";
+import { AUTH_BASE_URL } from "../api";
+import styled from "styled-components";
 
-const LoginForm = ({ handleLogin }) => {
+export const LogInForm = ({ handleLogin }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,7 +21,7 @@ const LoginForm = ({ handleLogin }) => {
     setError("");
 
     try {
-      const response = await fetch(`${BASE_URL}/users/login`, {
+      const response = await fetch(`${AUTH_BASE_URL}/sessions`, {
         method: "POST",
         body: JSON.stringify({
           email: formData.email,
@@ -37,6 +38,7 @@ const LoginForm = ({ handleLogin }) => {
 
       const data = await response.json();
       handleLogin(data.response);
+
     } catch (error) {
       setError("Invalid email or password");
       console.log(error);

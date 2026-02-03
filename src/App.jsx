@@ -4,6 +4,8 @@ import { MessageForm } from './components/MessageForm';
 import { MessageCard } from './components/MessageCard';
 import { GlobalStyle } from "./styles/GlobalStyle";
 import { fetchThoughts, postThought, likeThought, deleteThought, patchThought } from "./api.js";
+import { LogInForm } from "./components/LogInForm.jsx";
+import { SignUpForm } from './components/SignUpForm.jsx';
 
 // App - the main component for the application. It handles the list of messages och passes them down function to child components
 export const App = () => {
@@ -12,7 +14,8 @@ export const App = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null)
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token")); //This checks if there is a token saved, and if yes, your logged in!
+  const [isSigningUp, setIsSigningUp] = useState(true);
 
   // When the app starts, we get thoughts from API. The data is normalized and stored in messages (state). Runs only once when the app loads (empty array [])
   useEffect(() => {
@@ -39,7 +42,20 @@ export const App = () => {
     };
 
     loadThoughts();
-  }, []);
+  }, [token]); //When useEffect runs, token will change. 
+
+  const handleLogin = (userData) => {
+    if (userData.accessToken) {
+      localStorage.setItem("token", userData.accessToken);
+      setToken(userData.accessToken);
+    }
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setMessages([]);
+  }
 
   // addMessage - this function is called when MessageForm submits next time. It creates a message object and adds it to the start of the list 
   const addMessage = async (text) => {
@@ -113,22 +129,36 @@ export const App = () => {
   return (
     <>
       <GlobalStyle />
-      <AppContainer>
-        <MessageForm onSend={addMessage} />
-        {isLoading && <p>Loading thoughts...</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+      {!token ? (
+        <>
+          {isSigningUp ? (
+            <SignUpForm handleLogin={handleLogin} />
+          ) : (
+            <LogInForm handleLogin={handleLogin} />
+          )}
+          <ToggleButton onClick={() => setIsSigningUp(!isSigningUp)}>
+            {isSigningUp ? "Already have an account? Log in" : "Don´t have an account? Sign up"}
+          </ToggleButton>
+        </>
+      ) : (
+        <AppContainer>
+          <LogOutButton onClick={handleLogout}>Log Out</LogOutButton>
+          <MessageForm onSend={addMessage} />
+          {isLoading && <p>Loading thoughts...</p>}
+          {error && <p style={{ color: 'red' }}>{error}</p>}
 
-        <MessageList>
-          {messages.map((msg) => (
-            <MessageCard
-              key={msg.id}
-              message={msg}
-              onLike={handleLike}
-              onDelete={handleDelete}
-              onUpdate={handleUpdate} />
-          ))}
-        </MessageList>
-      </AppContainer>
+          <MessageList>
+            {messages.map((msg) => (
+              <MessageCard
+                key={msg.id}
+                message={msg}
+                onLike={handleLike}
+                onDelete={handleDelete}
+                onUpdate={handleUpdate} />
+            ))}
+          </MessageList>
+        </AppContainer>
+      )}
     </>
   );
 }
@@ -158,5 +188,34 @@ const MessageList = styled.section`
   }
 `;
 
+const LogOutButton = styled.button`
+  padding: 0.5rem 1rem;
+  background: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #b71c1c;
+  }
+`;
+
+const ToggleButton = styled.button`
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: #1976d2;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 1rem;
+  text-align: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+`;
 
 

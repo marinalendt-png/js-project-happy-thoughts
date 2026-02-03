@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { BASE_URL } from "./api";
+import { AUTH_BASE_URL } from "../api";
 
-export const SignUp = ({ handleLogin }) => {
+export const SignUpForm = ({ handleLogin }) => {
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     email: "",
@@ -13,7 +13,7 @@ export const SignUp = ({ handleLogin }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${BASE_URL}/users/signup`, {
+      const response = await fetch(`${AUTH_BASE_URL}/users`, {
         method: "POST",
         body: JSON.stringify({
           email: formData.email,
@@ -50,7 +50,7 @@ export const SignUp = ({ handleLogin }) => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Title>Sign In</Title>
+      <Title>Sign Up</Title>
       <InputWrapper>
         <Label>
           Email
@@ -72,7 +72,7 @@ export const SignUp = ({ handleLogin }) => {
         </Label>
       </InputWrapper>
       {error && <ErrorText>{error}</ErrorText>}
-      <Button type="submit">Sign In</Button>
+      <Button type="submit">Sign Up</Button>
     </Form>
   );
 };

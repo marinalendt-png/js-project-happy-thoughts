@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { MessageForm } from './components/MessageForm';
 import { MessageCard } from './components/MessageCard';
 import { GlobalStyle } from "./styles/GlobalStyle";
-import { fetchThoughts, postThought, likeThought } from "./api.js";
+import { fetchThoughts, postThought, likeThought, deleteThought, patchThought } from "./api.js";
 
 // App - the main component for the application. It handles the list of messages och passes them down function to child components
 export const App = () => {
@@ -29,8 +29,8 @@ export const App = () => {
         }));
 
         setMessages(normalized);
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        console.error(error);
         setError("Could not fetch thoughts. Please try again later.");
       } finally {
         setIsLoading(false);
@@ -43,7 +43,7 @@ export const App = () => {
   // addMessage - this function is called when MessageForm submits next time. It creates a message object and adds it to the start of the list 
   const addMessage = async (text) => {
     try {
-      const newThought = await postThought({ message: text }); //Sending to API
+      const newThought = await postThought(text); //Sending to API
 
       //Making the object easier to read in the app by normalizing it. 
       const normalized = {
@@ -55,29 +55,57 @@ export const App = () => {
 
       setMessages(prev => [normalized, ...prev]);
       setError(null); // add the newest message at the top 
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       setError("Could not send your thought. Make sure you have 5-140 characters.");
     }
   };
 
   // Updates the like count for a message both locally and in the API
   const handleLike = async (id) => {
-    setMessages(prev =>
-      prev.map(msg =>
-        msg.id === id ? { ...msg, likes: msg.likes + 1 } : msg
-      )
-    );
-
     try {
       const updatedThought = await likeThought(id);
       setMessages(prev =>
         prev.map(msg =>
-          msg.id === id ? { ...msg, likes: updatedThought.hearts } : msg
+          msg.id === id
+            ? { ...msg, likes: updatedThought.hearts }
+            : msg
         )
       )
-    } catch (err) {
-      console.error("Could not like thought", err);
+    } catch (error) {
+      console.error("Could not like thought", error);
+      setError("Could not like thought");
+    }
+  };
+
+  // Deletes the thought when the deletebutton is pushed
+  const handleDelete = async (id) => {
+    console.log("handleDelete called for ID:", id);
+    try {
+      await deleteThought(id);
+      setMessages(prev => prev.filter(message => message.id !== id))
+    } catch (error) {
+      console.error("delete failed:", error);
+      setError("Could not delete thought");
+    }
+  };
+
+  // Edits the thought when the editbutton is pushed
+  const handleUpdate = async (id) => {
+    const thought = messages.find(msg => msg.id === id);
+    if (!thought) return;
+
+    const newText = prompt("Edit your thought:", thought.text);
+    if (!newText || newText.trim().length === 0) return;
+
+    try {
+      const updatedThought = await patchThought(id, { message: newText });
+      console.log("Response from API:", updatedThought)
+      setMessages(prev => prev.map(msg => msg.id === id ? { ...msg, text: updatedThought.message || newText } : msg
+      ));
+    } catch (error) {
+      console.error("Update failed:");
+      setError("Could not update thought");
     }
   };
 
@@ -94,13 +122,17 @@ export const App = () => {
             <MessageCard
               key={msg.id}
               message={msg}
-              onLike={handleLike} />
+              onLike={handleLike}
+              onDelete={handleDelete}
+              onUpdate={handleUpdate} />
           ))}
         </MessageList>
       </AppContainer>
     </>
   );
 }
+
+
 
 // ===== Styled Components ===== //
 

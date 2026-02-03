@@ -1,4 +1,4 @@
-const BASE_URL = "https://js-project-api-e8xy.onrender.com/thoughts/";
+const BASE_URL = "https://js-project-api-e8xy.onrender.com/thoughts";
 
 // GET - fetches the 20 most recent thoughts from the API. A list of messages will be shown as the app loads. 
 export const fetchThoughts = async () => {
@@ -32,12 +32,15 @@ export const postThought = async (message) => {
 
 // POST - Like a thought. This function sends a like to the API using the thoughts ID. The API then sends back an updated thought, including a new heart count. 
 export const likeThought = async (thoughtId) => {
+  console.log("Sending like for ID:", thoughtId);
   try {
     const res = await fetch(`${BASE_URL}/${thoughtId}/like`, {
       method: "POST",
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
+
+    if (!res.ok) throw new Error(`Like failed`);
+
+    return await res.json();
   } catch (error) {
     console.error("liking thought failed:", error);
     throw error;
@@ -47,7 +50,7 @@ export const likeThought = async (thoughtId) => {
 //DELETE - remove a thought
 export const deleteThought = async (thoughtId) => {
   try {
-    const res = await fetch(`${BASE_URL}/${thoughtId}/delete`, {
+    const res = await fetch(`${BASE_URL}/${thoughtId}`, {
       method: "DELETE",
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);

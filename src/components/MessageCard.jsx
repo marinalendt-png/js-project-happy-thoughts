@@ -7,7 +7,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 // MessageCard - displays a single message with its text, like-button, like-count and relative timestamp
-export const MessageCard = ({ message, onLike }) => {
+export const MessageCard = ({ message, onLike, onDelete, onUpdate }) => {
   const [tick, setTick] = useState(0);
   const [likes, setLikes] = useState(message.likes ?? 0);
 
@@ -34,13 +34,14 @@ export const MessageCard = ({ message, onLike }) => {
 
   // For deleting a thought
   const handleDelete = () => {
+    console.log("Delete button clicked! ID:", message.id);
     if (onDelete) onDelete(message.id);
   };
 
   // For updating a thought
   const handleUpdate = () => {
-    if (onUpDate) onUpDate(message.id);
-  }
+    if (onUpdate) onUpdate(message.id);
+  };
 
   // Converts timestamp info "x minutes ago"
   const timeText = dayjs(message.time).fromNow();
@@ -60,7 +61,7 @@ export const MessageCard = ({ message, onLike }) => {
         </LikeContainer>
         <ButtonContainer>
           <EditButton onClick={handleUpdate} aria-label="Edit your thought">✏️</EditButton>
-          <DeleteButton onClick={handleDelete} aria-label="Delete your thought">✏️</DeleteButton>
+          <DeleteButton onClick={handleDelete} aria-label="Delete your thought">🗑️</DeleteButton>
         </ButtonContainer>
         <Time>{timeText}</Time>
       </CardFooter>
@@ -159,7 +160,7 @@ const ButtonContainer = styled.div`
   gap: 8px;
 `;
 
-const EditButton = styled.button`
+const EditButton = styled.button.attrs({ type: "button" })`
   background: none;
   border: none;
   cursor: pointer;
@@ -172,9 +173,9 @@ const EditButton = styled.button`
     }
   `;
 
-const DeleteButton = styled(EditButton)``; //Styled the same way as EditButton
+const DeleteButton = styled(EditButton).attrs({ type: "button" })``; //Styled the same way as EditButton
 
 const Time = styled.span`
   font-size: 12px;
-  color: color: #333;
+  color: #333;
 `;

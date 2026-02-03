@@ -78,3 +78,38 @@ export const patchThought = async (thoughtId, updates) => {
     throw error;
   }
 };
+
+// AUTH endpoints - for signup and login
+export const signUp = async (name, email, password) => {
+  try {
+    const res = await fetch(`${BASE_URL}/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
+    if (!res.ok) throw new Error("Sign up failed");
+    return res.json();
+  } catch (error) {
+    console.error("Sign up failed:", error)
+    throw error;
+  }
+};
+
+export const logIn = async (email, password) => {
+  try {
+    const res = await fetch(`${BASE_URL}/sessions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    if (!res.ok) throw new Error("Login failed");
+    return res.json();
+  } catch (error) {
+    console.error("Login failed:", error);
+    throw error;
+  }
+}

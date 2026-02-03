@@ -1,4 +1,5 @@
-const BASE_URL = "https://js-project-api-e8xy.onrender.com/thoughts";
+export const BASE_URL = "https://js-project-api-e8xy.onrender.com/thoughts";
+export const AUTH_BASE_URL = "https://js-project-api-e8xy.onrender.com";
 
 // GET - fetches the 20 most recent thoughts from the API. A list of messages will be shown as the app loads. 
 export const fetchThoughts = async () => {
@@ -82,7 +83,7 @@ export const patchThought = async (thoughtId, updates) => {
 // AUTH endpoints - for signup and login
 export const signUp = async (name, email, password) => {
   try {
-    const res = await fetch(`${BASE_URL}/users`, {
+    const res = await fetch(`${AUTH_BASE_URL}/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -99,7 +100,7 @@ export const signUp = async (name, email, password) => {
 
 export const logIn = async (email, password) => {
   try {
-    const res = await fetch(`${BASE_URL}/sessions`, {
+    const res = await fetch(`${AUTH_BASE_URL}/sessions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

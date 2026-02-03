@@ -12,6 +12,7 @@ export const App = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null)
+  const [token, setToken] = useState(null);
 
   // When the app starts, we get thoughts from API. The data is normalized and stored in messages (state). Runs only once when the app loads (empty array [])
   useEffect(() => {

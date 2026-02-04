@@ -42,7 +42,7 @@ export const App = () => {
     };
 
     loadThoughts();
-  }, [token]); //When useEffect runs, token will change. 
+  }, []);
 
   const handleLogin = (userData) => {
     if (userData.accessToken) {

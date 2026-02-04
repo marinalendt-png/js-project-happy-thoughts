@@ -1,10 +1,13 @@
 export const BASE_URL = "https://js-project-api-e8xy.onrender.com/thoughts";
 export const AUTH_BASE_URL = "https://js-project-api-e8xy.onrender.com";
 
+
+
 // GET - fetches the 20 most recent thoughts from the API. A list of messages will be shown as the app loads. 
 export const fetchThoughts = async () => {
   try {
     const res = await fetch(BASE_URL);
+
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
   } catch (error) {
@@ -15,11 +18,13 @@ export const fetchThoughts = async () => {
 
 // POST - creates a new thought. The API wants a JSON body with a "message" property. If it is successful, the API returns a full thought object back. 
 export const postThought = async (message) => {
+  const token = localStorage.getItem("token");
   try {
     const res = await fetch(BASE_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({ message }),
     });
@@ -40,7 +45,6 @@ export const likeThought = async (thoughtId) => {
     });
 
     if (!res.ok) throw new Error(`Like failed`);
-
     return await res.json();
   } catch (error) {
     console.error("liking thought failed:", error);
@@ -50,10 +54,16 @@ export const likeThought = async (thoughtId) => {
 
 //DELETE - remove a thought
 export const deleteThought = async (thoughtId) => {
+  const token = localStorage.getItem("token");
   try {
     const res = await fetch(`${BASE_URL}/${thoughtId}`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
     });
+
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
   } catch (error) {
@@ -64,11 +74,13 @@ export const deleteThought = async (thoughtId) => {
 
 //PATCH - update a thought
 export const patchThought = async (thoughtId, updates) => {
+  const token = localStorage.getItem("token");
   try {
     const res = await fetch(`${BASE_URL}/${thoughtId}`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify(updates),
     });
@@ -86,7 +98,7 @@ export const signUp = async (email, password) => {
     const res = await fetch(`${AUTH_BASE_URL}/users`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
     });
@@ -103,7 +115,7 @@ export const logIn = async (email, password) => {
     const res = await fetch(`${AUTH_BASE_URL}/sessions`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
     });

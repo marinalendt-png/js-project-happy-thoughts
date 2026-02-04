@@ -14,6 +14,7 @@ export const App = () => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null)
+  const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken") || "");
   const [token, setToken] = useState(localStorage.getItem("token")); //This checks if there is a token saved, and if yes, your logged in!
   const [isSigningUp, setIsSigningUp] = useState(true);
 

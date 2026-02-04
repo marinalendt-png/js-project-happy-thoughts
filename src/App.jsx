@@ -42,7 +42,7 @@ export const App = () => {
     };
 
     loadThoughts();
-  }, []);
+  }, [token]);
 
   const handleLogin = (userData) => {
     if (userData.accessToken) {
@@ -60,7 +60,7 @@ export const App = () => {
   // addMessage - this function is called when MessageForm submits next time. It creates a message object and adds it to the start of the list 
   const addMessage = async (text) => {
     try {
-      const newThought = await postThought(text); //Sending to API
+      const newThought = await postThought(text, accessToken); //Sending to API
 
       //Making the object easier to read in the app by normalizing it. 
       const normalized = {
@@ -144,21 +144,21 @@ export const App = () => {
         <AppContainer>
           <LogOutButton onClick={handleLogout}>Log Out</LogOutButton>
           <MessageForm onSend={addMessage} />
-          {isLoading && <p>Loading thoughts...</p>}
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-
-          <MessageList>
-            {messages.map((msg) => (
-              <MessageCard
-                key={msg.id}
-                message={msg}
-                onLike={handleLike}
-                onDelete={handleDelete}
-                onUpdate={handleUpdate} />
-            ))}
-          </MessageList>
         </AppContainer>
       )}
+      {isLoading && <p>Loading thoughts...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <MessageList>
+        {messages.map((msg) => (
+          <MessageCard
+            key={msg.id}
+            message={msg}
+            onLike={handleLike}
+            onDelete={token ? handleDelete : null}
+            onUpdate={token ? handleUpdate : null} />
+        ))}
+      </MessageList>
     </>
   );
 }

@@ -81,14 +81,14 @@ export const patchThought = async (thoughtId, updates) => {
 };
 
 // AUTH endpoints - for signup and login
-export const signUp = async (name, email, password) => {
+export const signUp = async (email, password) => {
   try {
     const res = await fetch(`${AUTH_BASE_URL}/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ email, password }),
     });
     if (!res.ok) throw new Error("Sign up failed");
     return res.json();

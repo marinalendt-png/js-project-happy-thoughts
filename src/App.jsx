@@ -15,7 +15,6 @@ export const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null)
   const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken") || "");
-  const [token, setToken] = useState(localStorage.getItem("token")); //This checks if there is a token saved, and if yes, your logged in!
   const [isSigningUp, setIsSigningUp] = useState(true);
 
   // When the app starts, we get thoughts from API. The data is normalized and stored in messages (state). Runs only once when the app loads (empty array [])
@@ -43,18 +42,18 @@ export const App = () => {
     };
 
     loadThoughts();
-  }, [token]);
+  }, [accessToken]);
 
   const handleLogin = (userData) => {
     if (userData.accessToken) {
-      localStorage.setItem("token", userData.accessToken);
-      setToken(userData.accessToken);
+      localStorage.setItem("accessToken", userData.accessToken);
+      setAccessToken(userData.accessToken);
     }
   }
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
+    localStorage.removeItem("accessToken");
+    setAccessToken(null);
     setMessages([]);
   }
 
@@ -98,9 +97,8 @@ export const App = () => {
 
   // Deletes the thought when the deletebutton is pushed
   const handleDelete = async (id) => {
-    console.log("handleDelete called for ID:", id);
     try {
-      await deleteThought(id);
+      await deleteThought(id, accessToken);
       setMessages(prev => prev.filter(message => message.id !== id))
     } catch (error) {
       console.error("delete failed:", error);
@@ -117,7 +115,7 @@ export const App = () => {
     if (!newText || newText.trim().length === 0) return;
 
     try {
-      const updatedThought = await patchThought(id, { message: newText });
+      const updatedThought = await patchThought(id, { message: newText }, accessToken);
       console.log("Response from API:", updatedThought)
       setMessages(prev => prev.map(msg => msg.id === id ? { ...msg, text: updatedThought.message || newText } : msg
       ));
@@ -130,7 +128,7 @@ export const App = () => {
   return (
     <>
       <GlobalStyle />
-      {!token ? (
+      {!accessToken ? (
         <>
           {isSigningUp ? (
             <SignUpForm handleLogin={handleLogin} />
@@ -156,8 +154,8 @@ export const App = () => {
             key={msg.id}
             message={msg}
             onLike={handleLike}
-            onDelete={token ? handleDelete : null}
-            onUpdate={token ? handleUpdate : null} />
+            onDelete={accessToken ? handleDelete : null}
+            onUpdate={accessToken ? handleUpdate : null} />
         ))}
       </MessageList>
     </>

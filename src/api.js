@@ -17,14 +17,13 @@ export const fetchThoughts = async () => {
 };
 
 // POST - creates a new thought. The API wants a JSON body with a "message" property. If it is successful, the API returns a full thought object back. 
-export const postThought = async (message) => {
-  const token = localStorage.getItem("token");
+export const postThought = async (message, accessToken) => {
   try {
     const res = await fetch(BASE_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        "Authorization": accessToken
       },
       body: JSON.stringify({ message }),
     });
@@ -38,7 +37,6 @@ export const postThought = async (message) => {
 
 // POST - Like a thought. This function sends a like to the API using the thoughts ID. The API then sends back an updated thought, including a new heart count. 
 export const likeThought = async (thoughtId) => {
-  console.log("Sending like for ID:", thoughtId);
   try {
     const res = await fetch(`${BASE_URL}/${thoughtId}/like`, {
       method: "POST",
@@ -54,13 +52,12 @@ export const likeThought = async (thoughtId) => {
 
 //DELETE - remove a thought
 export const deleteThought = async (thoughtId) => {
-  const token = localStorage.getItem("token");
   try {
     const res = await fetch(`${BASE_URL}/${thoughtId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        "Authorization": accessToken
       }
     });
 
@@ -74,13 +71,12 @@ export const deleteThought = async (thoughtId) => {
 
 //PATCH - update a thought
 export const patchThought = async (thoughtId, updates) => {
-  const token = localStorage.getItem("token");
   try {
     const res = await fetch(`${BASE_URL}/${thoughtId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        "Authorization": accessToken
       },
       body: JSON.stringify(updates),
     });

@@ -3,7 +3,7 @@ export const AUTH_BASE_URL = "https://js-project-api-e8xy.onrender.com";
 
 
 
-// GET - fetches the 20 most recent thoughts from the API. A list of messages will be shown as the app loads. 
+// GET - fetches the thoughts from the database
 export const fetchThoughts = async () => {
   try {
     const res = await fetch(BASE_URL);
@@ -16,7 +16,7 @@ export const fetchThoughts = async () => {
   }
 };
 
-// POST - creates a new thought. The API wants a JSON body with a "message" property. If it is successful, the API returns a full thought object back. 
+// POST - creates a new thought. 
 export const postThought = async (message, accessToken) => {
   try {
     const res = await fetch(BASE_URL, {
@@ -35,7 +35,7 @@ export const postThought = async (message, accessToken) => {
   }
 };
 
-// POST - Like a thought. This function sends a like to the API using the thoughts ID. The API then sends back an updated thought, including a new heart count. 
+// POST - Like a thought. You dont have to be logged in for this. 
 export const likeThought = async (thoughtId) => {
   try {
     const res = await fetch(`${BASE_URL}/${thoughtId}/like`, {
@@ -69,7 +69,7 @@ export const deleteThought = async (thoughtId, accessToken) => {
   }
 };
 
-//PATCH - update a thought
+//PATCH - update a thought, when changed. 
 export const patchThought = async (thoughtId, updates, accessToken) => {
   try {
     const res = await fetch(`${BASE_URL}/${thoughtId}`, {
@@ -88,7 +88,7 @@ export const patchThought = async (thoughtId, updates, accessToken) => {
   }
 };
 
-// AUTH endpoints - for signup and login
+// AUTH endpoints - for signup and login. 
 export const signUp = async (email, password) => {
   try {
     const res = await fetch(`${AUTH_BASE_URL}/users`, {

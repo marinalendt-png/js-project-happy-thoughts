@@ -44,23 +44,24 @@ export const App = () => {
     loadThoughts();
   }, [accessToken]);
 
+  // Saves token (authentication) so the app knows that the user is logged in
   const handleLogin = (userData) => {
     if (userData.accessToken) {
       localStorage.setItem("accessToken", userData.accessToken);
       setAccessToken(userData.accessToken);
     }
   }
-
+  // Removes token when the user logs out
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     setAccessToken(null);
     setMessages([]);
   }
 
-  // addMessage - this function is called when MessageForm submits next time. It creates a message object and adds it to the start of the list 
+  // Creates a new thought, the user must be logged in (accessToken)
   const addMessage = async (text) => {
     try {
-      const newThought = await postThought(text, accessToken); //Sending to API
+      const newThought = await postThought(text, accessToken);
 
       //Making the object easier to read in the app by normalizing it. 
       const normalized = {
@@ -78,7 +79,7 @@ export const App = () => {
     }
   };
 
-  // Updates the like count for a message both locally and in the API
+  // Liking a thought (also when user is logged in)
   const handleLike = async (id) => {
     try {
       const updatedThought = await likeThought(id);
@@ -95,7 +96,7 @@ export const App = () => {
     }
   };
 
-  // Deletes the thought when the deletebutton is pushed
+  // Deletes a thought (also when user is logged in)
   const handleDelete = async (id) => {
     try {
       await deleteThought(id, accessToken);
@@ -106,7 +107,7 @@ export const App = () => {
     }
   };
 
-  // Edits the thought when the editbutton is pushed
+  // Edits a thought (also when user is logged in)
   const handleUpdate = async (id) => {
     const thought = messages.find(msg => msg.id === id);
     if (!thought) return;
@@ -129,6 +130,7 @@ export const App = () => {
     <>
       <GlobalStyle />
       {!accessToken ? (
+        //LOGGED OUT: Shows login/signup 
         <>
           {isSigningUp ? (
             <SignUpForm handleLogin={handleLogin} />
@@ -140,6 +142,7 @@ export const App = () => {
           </ToggleButton>
         </>
       ) : (
+        //LOGGED IN: This shows when your logged in
         <AppContainer>
           <LogOutButton onClick={handleLogout}>Log Out</LogOutButton>
           <MessageForm onSend={addMessage} />
@@ -148,6 +151,7 @@ export const App = () => {
       {isLoading && <p>Loading thoughts...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
+      {/* This will show both in logged in and logged out*/}
       <MessageList>
         {messages.map((msg) => (
           <MessageCard

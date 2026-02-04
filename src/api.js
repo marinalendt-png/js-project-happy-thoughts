@@ -51,7 +51,7 @@ export const likeThought = async (thoughtId) => {
 };
 
 //DELETE - remove a thought
-export const deleteThought = async (thoughtId) => {
+export const deleteThought = async (thoughtId, accessToken) => {
   try {
     const res = await fetch(`${BASE_URL}/${thoughtId}`, {
       method: "DELETE",
@@ -70,7 +70,7 @@ export const deleteThought = async (thoughtId) => {
 };
 
 //PATCH - update a thought
-export const patchThought = async (thoughtId, updates) => {
+export const patchThought = async (thoughtId, updates, accessToken) => {
   try {
     const res = await fetch(`${BASE_URL}/${thoughtId}`, {
       method: "PATCH",

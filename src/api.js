@@ -1,5 +1,5 @@
-export const BASE_URL = "https://js-project-api-e8xy.onrender.com/thoughts";
-export const AUTH_BASE_URL = "https://js-project-api-e8xy.onrender.com";
+export const BASE_URL = "https://js-project-api-e8xy.onrender.com/thoughts"; // URL for thoughts
+export const AUTH_BASE_URL = "https://js-project-api-e8xy.onrender.com"; // URL for login and signup
 
 
 // GET - fetches the thoughts from the database

@@ -2,7 +2,6 @@ export const BASE_URL = "https://js-project-api-e8xy.onrender.com/thoughts";
 export const AUTH_BASE_URL = "https://js-project-api-e8xy.onrender.com";
 
 
-
 // GET - fetches the thoughts from the database
 export const fetchThoughts = async () => {
   try {

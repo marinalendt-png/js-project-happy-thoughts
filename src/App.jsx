@@ -7,17 +7,16 @@ import { fetchThoughts, postThought, likeThought, deleteThought, patchThought } 
 import { LogInForm } from "./components/LogInForm.jsx";
 import { SignUpForm } from './components/SignUpForm.jsx';
 
-// App - the main component for the application. It handles the list of messages och passes them down function to child components
 export const App = () => {
 
-  // States that stores all submitted messages, shows when loading and when error
+  // STATE 
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null)
   const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken") || "");
   const [isSigningUp, setIsSigningUp] = useState(true);
 
-  // When the app starts, we get thoughts from API. The data is normalized and stored in messages (state). Runs only once when the app loads (empty array [])
+
   useEffect(() => {
     const loadThoughts = async () => {
       try {

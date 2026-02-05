@@ -23,14 +23,7 @@ export const App = () => {
         setError(null); //reset previous errors
         const data = await fetchThoughts(); //calling api.js
 
-        const normalized = data.map((t) => ({
-          id: t._id,
-          text: t.message,
-          likes: t.hearts,
-          time: new Date(t.createdAt).getTime(),
-        }));
-
-        setMessages(normalized);
+        setMessages(data);
       } catch (error) {
         console.error(error);
         setError("Could not fetch thoughts. Please try again later.");
@@ -48,27 +41,19 @@ export const App = () => {
       localStorage.setItem("accessToken", userData.accessToken);
       setAccessToken(userData.accessToken);
     }
-  }
+  };
+
   // Removes token when the user logs out
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     setAccessToken(null);
     setMessages([]);
-  }
+  };
 
   // Creates a new thought, the user must be logged in (accessToken)
   const addMessage = async (text) => {
     try {
       const newThought = await postThought(text, accessToken);
-
-      //Making the object easier to read in the app by normalizing it. 
-      const normalized = {
-        id: newThought._id,
-        text: newThought.message,
-        likes: newThought.hearts,
-        time: new Date(newThought.createdAt).getTime()
-      };
-
       setMessages(prev => [normalized, ...prev]);
       setError(null); // add the newest message at the top 
     } catch (error) {
@@ -83,8 +68,8 @@ export const App = () => {
       const updatedThought = await likeThought(id);
       setMessages(prev =>
         prev.map(msg =>
-          msg.id === id
-            ? { ...msg, likes: updatedThought.hearts }
+          msg._id === id
+            ? { ...msg, hearts: updatedThought.hearts }
             : msg
         )
       )
@@ -136,10 +121,11 @@ export const App = () => {
             <LogInForm handleLogin={handleLogin} />
           )}
           <ToggleButton onClick={() => setIsSigningUp(!isSigningUp)}>
-            {isSigningUp ? "Already have an account? Log in here" : "Don´t have an account? Sign up here"}
+            {isSigningUp ? "Log in HERE, to post your own happy thought" : "Do you want to post your own happy thought? Sign up HERE"}
           </ToggleButton>
         </>
       ) : (
+
         //LOGGED IN: This shows when your logged in
         <AppContainer>
           <LogOutButton onClick={handleLogout}>Log Out</LogOutButton>
@@ -147,8 +133,8 @@ export const App = () => {
         </AppContainer>
       )}
       <LoadingContainer>
-        {isLoading && <p>Loading thoughts...</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {isLoading && <p style={{ textAlign: "center" }}>Loading thoughts...</p>}
+        {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
       </LoadingContainer>
 
       {/* This will show both in logged in and logged out*/}
@@ -165,8 +151,6 @@ export const App = () => {
     </>
   );
 }
-
-
 
 // ===== Styled Components ===== //
 
@@ -198,7 +182,7 @@ const MessageList = styled.section`
 `;
 
 const LogOutButton = styled.button`
-  padding: 0.5rem 1rem;
+  padding: 8px 16px;
   background: #d32f2f;
   color: white;
   border: none;
@@ -214,13 +198,13 @@ const LogOutButton = styled.button`
 `;
 
 const ToggleButton = styled.button`
-  padding: 0.5rem 1rem;
+  padding: 8px 16px;
   background: transparent;
   color: black;
   border: none;
   cursor: pointer;
   text-decoration: underline;
- margin-bottom: 16px;
+  margin-bottom: 16px;
   text-align: center;
   display: block;
   margin-left: auto;

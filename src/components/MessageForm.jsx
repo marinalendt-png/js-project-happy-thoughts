@@ -69,7 +69,6 @@ export const MessageForm = ({ onSend }) => {
 };
 
 // ===== Styled Components ===== //
-
 const FormWrapper = styled.form`
   display: flex;
   flex-direction: column;

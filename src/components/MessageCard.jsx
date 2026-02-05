@@ -9,12 +9,12 @@ dayjs.extend(relativeTime);
 // MessageCard - displays a single message with its text, like-button, like-count and relative timestamp
 export const MessageCard = ({ message, onLike, onDelete, onUpdate }) => {
   const [tick, setTick] = useState(0);
-  const [likes, setLikes] = useState(message.likes ?? 0);
+  const [likes, setLikes] = useState(message.hearts);
 
   // Update likes when app.js sends new data from API
   useEffect(() => {
-    setLikes(message.likes);
-  }, [message.likes]);
+    setLikes(message.hearts);
+  }, [message.hearts]);
 
   // Re-render every 60 sec for "time ago", and cleans up interval on unmount. 
   useEffect(() => {
@@ -24,7 +24,7 @@ export const MessageCard = ({ message, onLike, onDelete, onUpdate }) => {
 
   // Increments the like counter when the heard button is pressed, sends to the API
   const handleLike = () => {
-    if (onLike) onLike(message.id);
+    if (onLike) onLike(message._id);
   };
   console.log(
     "message.time:",
@@ -34,13 +34,13 @@ export const MessageCard = ({ message, onLike, onDelete, onUpdate }) => {
 
   // For deleting a thought
   const handleDelete = () => {
-    console.log("Delete button clicked! ID:", message.id);
-    if (onDelete) onDelete(message.id);
+    console.log("Delete button clicked! ID:", message._id);
+    if (onDelete) onDelete(message._id);
   };
 
   // For updating a thought
   const handleUpdate = () => {
-    if (onUpdate) onUpdate(message.id);
+    if (onUpdate) onUpdate(message._id);
   };
 
   // Converts timestamp info "x minutes ago"
@@ -48,7 +48,7 @@ export const MessageCard = ({ message, onLike, onDelete, onUpdate }) => {
 
   return (
     <CardWrapper>
-      <MessageText>{message.text}</MessageText>
+      <MessageText>{message.message}</MessageText>
       <CardFooter>
         <LikeContainer>
           <HeartButton
@@ -57,11 +57,15 @@ export const MessageCard = ({ message, onLike, onDelete, onUpdate }) => {
             aria-label="Like this thought"
           >❤️
           </HeartButton>
-          <LikesCount>{likes}</LikesCount>
+          <LikesCount>{message.hearts}</LikesCount>
         </LikeContainer>
         <ButtonContainer>
-          <EditButton onClick={handleUpdate} aria-label="Edit your thought">✏️</EditButton>
-          <DeleteButton onClick={handleDelete} aria-label="Delete your thought">🗑️</DeleteButton>
+          {onDelete && (
+            <DeleteButton onClick={handleDelete} aria-label="Delete your thought">🗑️</DeleteButton>
+          )}
+          {onUpdate && (
+            <EditButton onClick={handleUpdate} aria-label="Edit your thought">✏️</EditButton>
+          )}
         </ButtonContainer>
         <Time>{timeText}</Time>
       </CardFooter>
@@ -70,7 +74,6 @@ export const MessageCard = ({ message, onLike, onDelete, onUpdate }) => {
 };
 
 // ===== Styled Components ===== //
-
 /* With animation for new message */
 const CardWrapper = styled.section`
   display: flex;

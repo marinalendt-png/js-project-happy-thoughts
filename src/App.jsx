@@ -16,7 +16,6 @@ export const App = () => {
   const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken") || "");
   const [isSigningUp, setIsSigningUp] = useState(true);
 
-
   useEffect(() => {
     const loadThoughts = async () => {
       try {
@@ -137,7 +136,7 @@ export const App = () => {
             <LogInForm handleLogin={handleLogin} />
           )}
           <ToggleButton onClick={() => setIsSigningUp(!isSigningUp)}>
-            {isSigningUp ? "Already have an account? Log in" : "Don´t have an account? Sign up"}
+            {isSigningUp ? "Already have an account? Log in here" : "Don´t have an account? Sign up here"}
           </ToggleButton>
         </>
       ) : (
@@ -147,8 +146,10 @@ export const App = () => {
           <MessageForm onSend={addMessage} />
         </AppContainer>
       )}
-      {isLoading && <p>Loading thoughts...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <LoadingContainer>
+        {isLoading && <p>Loading thoughts...</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+      </LoadingContainer>
 
       {/* This will show both in logged in and logged out*/}
       <MessageList>
@@ -177,6 +178,12 @@ const AppContainer = styled.main`
   display: flex;
   flex-direction: column;
   gap: 20px;
+`;
+
+const LoadingContainer = styled.div`
+  width: 100%;
+  display: flex:
+  flex-direction: column;
 `;
 
 const MessageList = styled.section`
@@ -209,11 +216,11 @@ const LogOutButton = styled.button`
 const ToggleButton = styled.button`
   padding: 0.5rem 1rem;
   background: transparent;
-  color: #1976d2;
+  color: black;
   border: none;
   cursor: pointer;
   text-decoration: underline;
-  margin-top: 1rem;
+ margin-bottom: 16px;
   text-align: center;
   display: block;
   margin-left: auto;

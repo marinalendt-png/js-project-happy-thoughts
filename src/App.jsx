@@ -46,14 +46,15 @@ export const App = () => {
   // Removes token when the user logs out
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
-    setAccessToken(null);
+    setAccessToken("");
     setMessages([]);
   };
 
   // Creates a new thought, the user must be logged in (accessToken)
   const addMessage = async (text) => {
     if (!accessToken) {
-      setError("You must be loggd in to post a thought.")
+      setError("You must be logged in to post a thought.")
+      return;
     }
 
     try {

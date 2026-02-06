@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { AUTH_BASE_URL } from "../api";
+import { BASE_URL } from "../api";
 
 export const SignUpForm = ({ handleLogin }) => {
   const [error, setError] = useState("");
@@ -13,7 +13,7 @@ export const SignUpForm = ({ handleLogin }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${AUTH_BASE_URL}/users`, {
+      const response = await fetch(`${BASE_URL}/signup`, {
         method: "POST",
         body: JSON.stringify({
           email: formData.email,

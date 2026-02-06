@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AUTH_BASE_URL } from "../api";
+import { BASE_URL } from "../api";
 import styled from "styled-components";
 
 export const LogInForm = ({ handleLogin }) => {
@@ -21,7 +21,7 @@ export const LogInForm = ({ handleLogin }) => {
     setError("");
 
     try {
-      const response = await fetch(`${AUTH_BASE_URL}/sessions`, {
+      const response = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         body: JSON.stringify({
           email: formData.email,

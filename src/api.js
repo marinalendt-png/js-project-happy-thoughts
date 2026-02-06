@@ -1,11 +1,9 @@
-export const BASE_URL = "https://js-project-api-e8xy.onrender.com/thoughts"; // URL for thoughts
-export const AUTH_BASE_URL = "https://js-project-api-e8xy.onrender.com"; // URL for login and signup
-
+export const BASE_URL = "https://js-project-api-e8xy.onrender.com"; // URL for thoughts
 
 // GET - fetches the thoughts from the database
 export const fetchThoughts = async () => {
   try {
-    const res = await fetch(BASE_URL);
+    const res = await fetch(`${BASE_URL}/thoughts`);
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
@@ -18,7 +16,7 @@ export const fetchThoughts = async () => {
 // POST - creates a new thought. 
 export const postThought = async (message, accessToken) => {
   try {
-    const res = await fetch(BASE_URL, {
+    const res = await fetch(`${BASE_URL}/thought`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +35,7 @@ export const postThought = async (message, accessToken) => {
 // POST - Like a thought. You dont have to be logged in for this. 
 export const likeThought = async (thoughtId) => {
   try {
-    const res = await fetch(`${BASE_URL}/${thoughtId}/like`, {
+    const res = await fetch(`${BASE_URL}/thoughts/${thoughtId}/like`, {
       method: "POST",
     });
 
@@ -52,7 +50,7 @@ export const likeThought = async (thoughtId) => {
 //DELETE - remove a thought
 export const deleteThought = async (thoughtId, accessToken) => {
   try {
-    const res = await fetch(`${BASE_URL}/${thoughtId}`, {
+    const res = await fetch(`${BASE_URL}/thoughts/${thoughtId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +69,7 @@ export const deleteThought = async (thoughtId, accessToken) => {
 //PATCH - update a thought, when changed. 
 export const patchThought = async (thoughtId, updates, accessToken) => {
   try {
-    const res = await fetch(`${BASE_URL}/${thoughtId}`, {
+    const res = await fetch(`${BASE_URL}/toughts/${thoughtId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -90,7 +88,7 @@ export const patchThought = async (thoughtId, updates, accessToken) => {
 // AUTH endpoints - for signup and login. 
 export const signUp = async (email, password) => {
   try {
-    const res = await fetch(`${AUTH_BASE_URL}/users`, {
+    const res = await fetch(`${BASE_URL}/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -107,7 +105,7 @@ export const signUp = async (email, password) => {
 
 export const logIn = async (email, password) => {
   try {
-    const res = await fetch(`${AUTH_BASE_URL}/sessions`, {
+    const res = await fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

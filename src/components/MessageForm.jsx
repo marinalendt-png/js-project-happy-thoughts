@@ -74,12 +74,12 @@ const FormWrapper = styled.form`
   flex-direction: column;
   gap: 12px;
   background: rgba(237, 232, 232, 1);
-  padding: 20px;
+  padding: 16px;
   border: 1px solid #000;
   border-radius: 2px;
   box-shadow: 6px 6px 0 #000;
   width: 100%;
-  max-width: 550px;
+  max-width: 100%;
   margin: 0 auto;
   margin-top: 30px;
 `;

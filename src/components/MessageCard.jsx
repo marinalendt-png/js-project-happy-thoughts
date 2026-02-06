@@ -79,13 +79,13 @@ const CardWrapper = styled.section`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 20px;
+  padding: 16px;
   border: 1px solid #000;
   border-radius: 2px;
   box-shadow: 6px 6px 0 #000;
   margin: 0 auto;
   width: 100%; 
-  max-width: 550px;
+  max-width: 100%;
   opacity: 0;
   transform: translateY(-20px) scale(0.95);
   animation: fadeIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;

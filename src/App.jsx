@@ -52,9 +52,13 @@ export const App = () => {
 
   // Creates a new thought, the user must be logged in (accessToken)
   const addMessage = async (text) => {
+    if (!accessToken) {
+      setError("You must be loggd in to post a thought.")
+    }
+
     try {
       const newThought = await postThought(text, accessToken);
-      setMessages(prev => [normalized, ...prev]);
+      setMessages(prev => [newThought, ...prev]);
       setError(null); // add the newest message at the top 
     } catch (error) {
       console.error(error);
@@ -83,7 +87,7 @@ export const App = () => {
   const handleDelete = async (id) => {
     try {
       await deleteThought(id, accessToken);
-      setMessages(prev => prev.filter(message => message.id !== id))
+      setMessages(prev => prev.filter(message => message._id !== id))
     } catch (error) {
       console.error("delete failed:", error);
       setError("Could not delete thought");
@@ -92,17 +96,18 @@ export const App = () => {
 
   // Edits a thought (also when user is logged in)
   const handleUpdate = async (id) => {
-    const thought = messages.find(msg => msg.id === id);
+    const thought = messages.find(msg => msg._id === id);
     if (!thought) return;
 
-    const newText = prompt("Edit your thought:", thought.text);
+    const newText = prompt("Edit your thought:", thought.message);
     if (!newText || newText.trim().length === 0) return;
 
     try {
       const updatedThought = await patchThought(id, { message: newText }, accessToken);
       console.log("Response from API:", updatedThought)
-      setMessages(prev => prev.map(msg => msg.id === id ? { ...msg, text: updatedThought.message || newText } : msg
-      ));
+      setMessages(prev => prev.map(msg => msg._id === id ? updatedThought : msg
+      )
+      );
     } catch (error) {
       console.error("Update failed:");
       setError("Could not update thought");
@@ -141,7 +146,7 @@ export const App = () => {
       <MessageList>
         {messages.map((msg) => (
           <MessageCard
-            key={msg.id}
+            key={msg._id}
             message={msg}
             onLike={handleLike}
             onDelete={accessToken ? handleDelete : null}

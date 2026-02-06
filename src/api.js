@@ -16,11 +16,11 @@ export const fetchThoughts = async () => {
 // POST - creates a new thought. 
 export const postThought = async (message, accessToken) => {
   try {
-    const res = await fetch(`${BASE_URL}/thought`, {
+    const res = await fetch(`${BASE_URL}/thoughts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": accessToken
+        "Authorization": `Bearer ${accessToken}`
       },
       body: JSON.stringify({ message }),
     });
@@ -54,7 +54,7 @@ export const deleteThought = async (thoughtId, accessToken) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": accessToken
+        "Authorization": `Bearer ${accessToken}`
       }
     });
 
@@ -69,11 +69,11 @@ export const deleteThought = async (thoughtId, accessToken) => {
 //PATCH - update a thought, when changed. 
 export const patchThought = async (thoughtId, updates, accessToken) => {
   try {
-    const res = await fetch(`${BASE_URL}/toughts/${thoughtId}`, {
+    const res = await fetch(`${BASE_URL}/thoughts/${thoughtId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": accessToken
+        "Authorization": `Bearer ${accessToken}`
       },
       body: JSON.stringify(updates),
     });

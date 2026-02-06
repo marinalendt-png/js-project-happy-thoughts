@@ -164,13 +164,12 @@ export const App = () => {
 
 const AppContainer = styled.main`
   width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  margin: 0 20px;
+  max-width: 500px;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  margin: 0 auto;
 `;
 
 const LoadingContainer = styled.div`
@@ -184,20 +183,18 @@ const MessageList = styled.section`
   flex-direction: column;
   gap: 16px;
   width: 100%;
-  max-width: 100%;
+  max-width: 500px;
   padding: 16px;
   margin: 0 auto;
 
   @media (min-width: 480px) {
     gap: 20px;
     padding: 24px;
-    max-width: 500px;
   }
 
   @media (min-width: 768px) { 
     gap: 24px;
     padding: 32px;
-    max-width: 500px;
   }
 `;
 

@@ -20,7 +20,7 @@ export const postThought = async (message, accessToken) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`
+        "Authorization": accessToken
       },
       body: JSON.stringify({ message }),
     });
@@ -54,7 +54,7 @@ export const deleteThought = async (thoughtId, accessToken) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`
+        "Authorization": accessToken
       }
     });
 
@@ -73,7 +73,7 @@ export const patchThought = async (thoughtId, updates, accessToken) => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`
+        "Authorization": accessToken
       },
       body: JSON.stringify(updates),
     });

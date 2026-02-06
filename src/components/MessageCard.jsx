@@ -44,7 +44,7 @@ export const MessageCard = ({ message, onLike, onDelete, onUpdate }) => {
   };
 
   // Converts timestamp info "x minutes ago"
-  const timeText = dayjs(message.time).fromNow();
+  const timeText = dayjs(message.createdAt).fromNow();
 
   return (
     <CardWrapper>

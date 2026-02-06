@@ -22,8 +22,9 @@ export const App = () => {
         setIsLoading(true); //shows text when loading
         setError(null); //reset previous errors
         const data = await fetchThoughts(); //calling api.js
+        const sorted = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); //Added to make the dating work 
 
-        setMessages(data);
+        setMessages(sorted);
       } catch (error) {
         console.error(error);
         setError("Could not fetch thoughts. Please try again later.");
@@ -52,13 +53,13 @@ export const App = () => {
 
   // Creates a new thought, the user must be logged in (accessToken)
   const addMessage = async (text) => {
-    if (!accessToken) {
-      setError("You must be logged in to post a thought.")
-      return;
-    }
-
     try {
       const newThought = await postThought(text, accessToken);
+      if (!newThought || !newThought._id) {
+        console.error("Invalid newThought returned from API:", newThought)
+        return;
+      }
+
       setMessages(prev => [newThought, ...prev]);
       setError(null); // add the newest message at the top 
     } catch (error) {
@@ -145,14 +146,15 @@ export const App = () => {
 
       {/* This will show both in logged in and logged out*/}
       <MessageList>
-        {messages.map((msg) => (
-          <MessageCard
-            key={msg._id}
-            message={msg}
-            onLike={handleLike}
-            onDelete={accessToken ? handleDelete : null}
-            onUpdate={accessToken ? handleUpdate : null} />
-        ))}
+        {messages.filter(msg => msg)
+          .map((msg) => (
+            <MessageCard
+              key={msg._id}
+              message={msg}
+              onLike={handleLike}
+              onDelete={accessToken ? handleDelete : null}
+              onUpdate={accessToken ? handleUpdate : null} />
+          ))}
       </MessageList>
     </>
   );

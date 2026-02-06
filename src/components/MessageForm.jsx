@@ -20,8 +20,8 @@ export const MessageForm = ({ onSend }) => {
     }
 
     onSend(message);
-    setMessage("");
     setError(null);
+    setMessage("");
   };
 
   // When the user writes in the textarea, this function runs. If its to long, cut it by 140 letters
